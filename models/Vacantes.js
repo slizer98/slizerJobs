@@ -42,6 +42,11 @@ const vacantesSchema = new mongoose.Schema({
         cv: String
     }],
 });
-
+vacantesSchema.pre('save', function(next) {
+    // crear la url
+    const url = slug(this.titulo);
+    this.url = `${url}-${shortid.generate()}`;
+    next();
+})
 // exportar el modelo
 export default mongoose.model('Vacante', vacantesSchema);

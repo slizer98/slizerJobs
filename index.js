@@ -1,10 +1,11 @@
 
 import './config/db.js';
 import express from 'express';
-import exhbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import router from './routes/index.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import seleccionarSkills  from './helpers/handlebars.js';
 // pasar la sesion a la base de datos
 
 import MongoStore from 'connect-mongo';
@@ -15,8 +16,9 @@ dotenv.config({path: '.env'});
 const app = express();
 
 // Settings
-app.engine('handlebars', exhbs.engine({
-    defaultLayout: 'layout'
+app.engine('handlebars', engine({
+    defaultLayout: 'layout',
+    helpers: {seleccionarSkills}
 }));
 app.set('view engine', 'handlebars');
 
