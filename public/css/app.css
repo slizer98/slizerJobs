@@ -515,3 +515,7 @@ p.candidatos {
     color: white;
     font-size: 1.8rem;
 }
+
+trix-toolbar .trix-button-group.trix-button-group--file-tools {
+    display: none;
+}
