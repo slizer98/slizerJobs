@@ -89,12 +89,12 @@ h3 {
 
 
 .site-header {
-    min-height: 400px;
+    min-height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
 }
 
 .nombre-sitio {

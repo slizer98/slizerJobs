@@ -46,6 +46,7 @@ vacantesSchema.pre('save', function(next) {
     // crear la url
     const url = slug(this.titulo);
     this.url = `${url}-${shortid.generate()}`;
+    
     next();
 })
 // exportar el modelo

@@ -5,6 +5,8 @@ import {engine} from 'express-handlebars';
 import router from './routes/index.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import handlebars from 'handlebars';
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 import seleccionarSkills  from './helpers/handlebars.js';
 // pasar la sesion a la base de datos
 
@@ -20,6 +22,7 @@ app.use(express.json());
 
 // Settings
 app.engine('handlebars', engine({
+    handlebars: allowInsecurePrototypeAccess(handlebars),
     defaultLayout: 'layout',
     helpers: {seleccionarSkills}
 }));

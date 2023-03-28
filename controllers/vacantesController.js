@@ -15,10 +15,23 @@ const agregarVacante = async(req, res) => {
     // Almacenar en la BD
     const nuevaVacante = await vacante.save();
 
-    res.redirect(`/vacantes/${nuevaVacante.url}}`);
+    res.redirect(`/vacantes/${nuevaVacante.url}`);
+}
+
+const mostrarVacante = async(req, res, next) => {
+    const vacante = await Vacante.findOne({ url: req.params.url });
+
+    if (!vacante) return next();
+
+    res.render('vacante', {
+        vacante,
+        nombrePagina: vacante.titulo,
+        barra: true
+    });
 }
 
 export {
     formularioNuevaVacante,
-    agregarVacante
+    agregarVacante,
+    mostrarVacante
 }
