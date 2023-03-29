@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import handlebars from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
-import seleccionarSkills  from './helpers/handlebars.js';
+import { seleccionarSkills, tipoContrato}  from './helpers/handlebars.js';
 // pasar la sesion a la base de datos
 
 import MongoStore from 'connect-mongo';
@@ -24,7 +24,7 @@ app.use(express.json());
 app.engine('handlebars', engine({
     handlebars: allowInsecurePrototypeAccess(handlebars),
     defaultLayout: 'layout',
-    helpers: {seleccionarSkills}
+    helpers: {seleccionarSkills, tipoContrato}
 }));
 app.set('view engine', 'handlebars');
 
