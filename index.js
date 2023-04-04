@@ -1,6 +1,7 @@
 
 import './config/db.js';
 import express from 'express';
+import flash from 'connect-flash';
 import {engine} from 'express-handlebars';
 import router from './routes/index.js';
 import cookieParser from 'cookie-parser';
@@ -41,6 +42,13 @@ app.use(session({
         mongoUrl: process.env.DATABASE
     })
 }));
+
+app.use(flash());
+// middleware
+app.use((req, res, next) => {
+    res.locals.mensajes = req.flash();
+    next();
+});
 
 app.use('/', router);
 
