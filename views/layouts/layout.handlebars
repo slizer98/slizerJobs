@@ -25,6 +25,7 @@
         {{/if}}
     </div>
     <header class="site-header contendor separador">
+        <h3>{{nombrePagina}}</h3>
         {{#if tagline}}
             <p class="tagline">{{tagline}}</p>
         {{/if}}
@@ -33,6 +34,13 @@
         {{/if}}
     </header>
     <div class="contenido-principal contenedor">
+        {{#if mensajes}}
+            <div class="alerta {{tipo}}">
+                {{#mostrarAlertas mensajes}}
+                {{/mostrarAlertas}}
+            </div>
+        {{/if}}
+        
         {{{body}}}
     </div>
     <script src="/dist/bundle.js"></script>

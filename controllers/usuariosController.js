@@ -12,7 +12,8 @@ const validarRegistro = async(req, res, next) => {
 
     await check('nombre', 'El nombre es obligatorio').notEmpty().escape().run(req);
     await check('email', 'El email es obligatorio').notEmpty().run(req);
-    await check('password', 'El password es obligatorio').notEmpty().isLength({min: 6}).run(req);
+    await check('password', 'El password es obligatorio').notEmpty().run(req);
+    await check('password', 'El password debe ser minimo de 6 caracteres').isLength({min: 6}).run(req);
     await check('confirmar', 'El password no coincide').equals(req.body.password).notEmpty().run(req);
     const errores = validationResult(req);
     if(!errores.isEmpty()){
@@ -31,10 +32,15 @@ const crearUsuario = async(req, res, next) => {
 
     const usuario = new Usuarios(req.body);
 
-    const nuevoUsuario = await usuario.save();
-    if(!nuevoUsuario) return next();
+    try {
+        await usuario.save();
+        res.redirect('/iniciar-sesion');
+        
+    } catch (error) {
+        req.flash('error', error);
+        res.redirect('/crear-cuenta');
+    }
 
-    res.redirect('/iniciar-sesion');
 }
 export {
     formCrearCuenta,

@@ -95,3 +95,19 @@ export const tipoContrato = (seleccionado, opciones) => {
         new RegExp(` value="${seleccionado}"`), '$& selected="selected"'
     );
 }
+
+export const mostrarAlertas = (errores = {}, alertas) => {
+    const categoria = Object.keys(errores);
+    
+    let html = '';
+
+    if(categoria.length){
+        errores[categoria].forEach(error => {
+            html += `
+                <div class="${categoria} alerta">
+                    ${error}
+                </div>`;
+        });
+    }
+    return html;
+}
