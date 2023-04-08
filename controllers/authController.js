@@ -8,5 +8,22 @@ const autenticarUsuario = passport.authenticate("local", {
 
 });
 
+// Revisar si el usuario esta autenticado o no
+const verificarUsuario = (req, res, next) => {
+    // Revisar el usuario
+    if (req.isAuthenticated()) {
+        return next(); // El usuario esta autenticado, adelante
+    }
 
-export { autenticarUsuario };
+    // Redireccionar al formulario
+    res.redirect("/iniciar-sesion");
+}
+
+const mostrarPanel = (req, res) => {
+    res.render("administracion", {
+        nombrePagina: "Panel de Administración",
+        tagline: "Crea y administra tus vacantes desde aquí",
+    });
+}
+
+export { autenticarUsuario, mostrarPanel, verificarUsuario };
