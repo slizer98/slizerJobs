@@ -9,7 +9,7 @@ import session from 'express-session';
 import handlebars from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 import { seleccionarSkills, tipoContrato, mostrarAlertas}  from './helpers/handlebars.js';
-// pasar la sesion a la base de datos
+import passport from './config/passport.js';
 
 import MongoStore from 'connect-mongo';
 
@@ -27,6 +27,9 @@ app.engine('handlebars', engine({
     defaultLayout: 'layout',
     helpers: {seleccionarSkills, tipoContrato, mostrarAlertas}
 }));
+
+
+
 app.set('view engine', 'handlebars');
 
 // static files
@@ -42,6 +45,9 @@ app.use(session({
         mongoUrl: process.env.DATABASE
     })
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 // middleware

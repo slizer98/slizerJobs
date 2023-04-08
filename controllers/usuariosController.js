@@ -42,8 +42,17 @@ const crearUsuario = async(req, res, next) => {
     }
 
 }
+
+
+const formIniciarSesion = (req, res) => {
+    res.render('iniciar-sesion', {
+        nombrePagina: 'Iniciar Sesion en SlizerJobs'
+    });
+}
+
 export {
     formCrearCuenta,
     validarRegistro,
     crearUsuario,
+    formIniciarSesion
 }
