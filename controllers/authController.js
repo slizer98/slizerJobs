@@ -1,4 +1,5 @@
 import passport from "passport";
+import Vacante from "../models/Vacantes.js";
 
 const autenticarUsuario = passport.authenticate("local", {
     successRedirect: "/administracion",
@@ -19,10 +20,14 @@ const verificarUsuario = (req, res, next) => {
     res.redirect("/iniciar-sesion");
 }
 
-const mostrarPanel = (req, res) => {
+const mostrarPanel = async(req, res) => {
+    // consultar el usuario autenticado
+    const vacantes = await Vacante.find({ autor: req.user._id });
+
     res.render("administracion", {
         nombrePagina: "Panel de Administración",
         tagline: "Crea y administra tus vacantes desde aquí",
+        vacantes,
     });
 }
 

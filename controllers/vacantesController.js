@@ -10,6 +10,8 @@ const formularioNuevaVacante = (req, res) => {
 const agregarVacante = async(req, res) => {
     const vacante = new Vacante(req.body);
 
+    vacante.autor = req.user._id;
+
     // Crear arreglo de habilidades
     vacante.skills = req.body.skills.split(',');
     // Almacenar en la BD
