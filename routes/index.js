@@ -12,8 +12,10 @@ import {
     crearUsuario, 
     validarRegistro,
     formIniciarSesion,
+    formEditarPerfil,
+    editarPerfil,
     } from '../controllers/usuariosController.js';
-import { autenticarUsuario, mostrarPanel, verificarUsuario } from '../controllers/authController.js';
+import { autenticarUsuario, mostrarPanel, verificarUsuario, cerrarSesion } from '../controllers/authController.js';
 const router = express.Router();
 
 router.get('/', mostrarTrabajos);
@@ -35,8 +37,14 @@ router.post('/crear-cuenta', validarRegistro, crearUsuario);
 router.get('/iniciar-sesion', formIniciarSesion);
 router.post('/iniciar-sesion', autenticarUsuario);
 
+// cerrar sesion
+router.get('/cerrar-sesion',verificarUsuario, cerrarSesion );
+
 // Administracion 
 router.get('/administracion', verificarUsuario ,mostrarPanel);
 
+// editar perfil 
+router.get('/editar-perfil', verificarUsuario, formEditarPerfil);
+router.post('/editar-perfil', verificarUsuario, editarPerfil);
 
 export default router;

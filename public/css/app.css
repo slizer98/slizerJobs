@@ -409,6 +409,11 @@ p.candidatos {
 .cerrar-sesion a {
     margin:  0 2rem 0 0 ;
     color: #888;
+    transition:  all .3s ease-in-out;
+}
+
+.cerrar-sesion a:hover{
+    color: #fff;
 }
 .cerrar-sesion {
     margin-top: 2rem;
