@@ -6,6 +6,8 @@ import {
     mostrarVacante, 
     formEditarVacante, 
     editarVacante,
+    validarVacante,
+    eliminarVacante
     } from '../controllers/vacantesController.js';
 import { 
     formCrearCuenta, 
@@ -14,20 +16,24 @@ import {
     formIniciarSesion,
     formEditarPerfil,
     editarPerfil,
+    validarPerfil,
     } from '../controllers/usuariosController.js';
 import { autenticarUsuario, mostrarPanel, verificarUsuario, cerrarSesion } from '../controllers/authController.js';
 const router = express.Router();
 
 router.get('/', mostrarTrabajos);
 router.get('/vacantes/nueva', verificarUsuario, formularioNuevaVacante);
-router.post('/vacantes/nueva', verificarUsuario, agregarVacante);
+router.post('/vacantes/nueva', verificarUsuario, validarVacante, agregarVacante);
 
 // mostrar una vacante
 router.get('/vacantes/:url', mostrarVacante);
 
 // editar vacante
 router.get('/vacantes/editar/:url', verificarUsuario, formEditarVacante);
-router.post('/vacantes/editar/:url', verificarUsuario, editarVacante);
+router.post('/vacantes/editar/:url', verificarUsuario, validarVacante, editarVacante);
+
+// eliminar vacante
+router.delete('/vacantes/eliminar/:id', verificarUsuario, eliminarVacante);
 
 // crear cuentas
 router.get('/crear-cuenta', formCrearCuenta);
@@ -45,6 +51,6 @@ router.get('/administracion', verificarUsuario ,mostrarPanel);
 
 // editar perfil 
 router.get('/editar-perfil', verificarUsuario, formEditarPerfil);
-router.post('/editar-perfil', verificarUsuario, editarPerfil);
+router.post('/editar-perfil', verificarUsuario, validarPerfil, editarPerfil);
 
 export default router;

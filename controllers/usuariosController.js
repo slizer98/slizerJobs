@@ -74,6 +74,27 @@ const editarPerfil = async(req, res) => {
     }, 1000);
 }
 
+const validarPerfil = async(req, res, next) => {
+    await check('nombre', 'El nombre es obligatorio').notEmpty().run(req);
+    await check('email', 'El email es obligatorio').notEmpty().run(req);
+    if(req.body.password){
+        await check('password', 'El password debe ser minimo de 6 caracteres').isLength({min: 6}).run(req);
+    }
+    const errores = validationResult(req);
+    if(!errores.isEmpty()){
+        req.flash('error', errores.array().map(error => error.msg));
+        res.render('editar-perfil', {
+            nombrePagina: 'Edita tu perfil en SlizerJobs',
+            usuario: req.user,
+            cerrarSesion: true,
+            nombre: req.user.nombre,
+            mensajes: req.flash()
+        });
+        return;
+    }
+    next();
+}
+
 export {
     formCrearCuenta,
     validarRegistro,
@@ -81,4 +102,5 @@ export {
     formIniciarSesion,
     formEditarPerfil,
     editarPerfil,
+    validarPerfil
 }

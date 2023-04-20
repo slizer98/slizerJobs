@@ -1,3 +1,4 @@
+import {check, validationResult}  from 'express-validator'
 import Vacante from '../models/Vacantes.js';
 
 const formularioNuevaVacante = (req, res) => {
@@ -62,10 +63,40 @@ const editarVacante = async(req, res) => {
     res.redirect(`/vacantes/${vacante.url}`);
 }
 
+// validar campos de nuevas vacantes
+const validarVacante = async(req, res, next) => {
+    await check('titulo', 'Agrega un titulo a la vacante').notEmpty().run(req);
+    await check('empresa', 'Agrega una empresa').notEmpty().run(req);
+    await check('ubicacion', 'Agrega una ubicacion').notEmpty().run(req);
+    await check('contrato', 'Selecciona el tipo de contrato').notEmpty().run(req);
+    await check('skills', 'Agrega al menos una habilidad').notEmpty().run(req);
+
+    const errores = validationResult(req);
+    if(!errores.isEmpty()){
+        req.flash('error', errores.array().map(error => error.msg));
+        res.render('nueva-vacante', {
+            nombrePagina: 'Nueva Vacante',
+            tagline: 'Llena el formulario y publica tu vacante',
+            cerrarSesion: true,
+            nombre: req.user.nombre,
+            mensajes: req.flash()
+        });
+        return;
+    }
+    next();
+}   
+
+const eliminarVacante = async(req, res) => {
+    const { id } = req.params;
+    res.status(200).send('Vacante eliminada correctamente');
+}
+
 export {
     formularioNuevaVacante,
     agregarVacante,
     mostrarVacante,
     formEditarVacante,
-    editarVacante
+    editarVacante,
+    validarVacante,
+    eliminarVacante
 }

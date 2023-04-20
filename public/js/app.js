@@ -1,3 +1,6 @@
+import axios from "axios";
+import Swal from "sweetalert2";
+
 document.addEventListener('DOMContentLoaded', () => {
     const skills = document.querySelector(".lista-conocimientos")
     let alertas = document.querySelector('.alerta');
@@ -8,6 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
         skills.addEventListener('click', agregarSkills);
         skillsSeleccionados();
     }
+
+    const vacantesListado = document.querySelector('.panel-administracion');
+
+    if(vacantesListado) {
+        vacantesListado.addEventListener('click', accionesListado);
+    }
+    
 });
 
 const skills = new Set();
@@ -44,4 +54,44 @@ const limpiarAlertas = () => {
             alertas.removeChild(alertas.children[0]);
         }, 3000);
     }
+}
+
+// Eliminar vacantes
+const accionesListado = e => {
+    e.preventDefault();
+    if(!e.target.dataset.eliminar) {
+        window.location.href = e.target.href;
+    }
+
+    Swal.fire({
+        title: 'Deseas borrar esta vacante?',
+        text: "Una vacante eliminada no se puede recuperar!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Borrar!',
+        cancelButtonText: 'No, Cancelar'
+    }).then((result) => {
+        if(result.value) {
+
+            // Enviar petición con axios
+
+            const url = `${location.origin}/vacantes/eliminar/${e.target.dataset.eliminar}`;
+
+            axios.delete(url, { params: {url}})
+                .then(function(respuesta) {
+                    if(respuesta.status === 200) {
+                        Swal.fire(
+                            'Vacante Eliminada!',
+                            respuesta.data,
+                            'success'
+                        );
+                        e.target.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement);
+                    }
+                })    
+            
+
+        }
+    });
 }
