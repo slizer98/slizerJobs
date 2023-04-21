@@ -86,10 +86,22 @@ const validarVacante = async(req, res, next) => {
     next();
 }   
 
-const eliminarVacante = async(req, res) => {
+const eliminarVacante = async(req, res, next) => {
     const { id } = req.params;
+
+    const vacante = await Vacante.findById(id);
+    if(!verificarAutor(vacante, req.user)){
+        res.status(403).send('Error');
+        return next();
+    }
+    vacante.deleteOne();
     res.status(200).send('Vacante eliminada correctamente');
 }
+
+const verificarAutor = async(vacante = {}, usuario = {}) => {
+    if(!vacante.autor.equals(usuario._id)) return false;
+    return true;
+}   
 
 export {
     formularioNuevaVacante,
