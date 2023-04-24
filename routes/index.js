@@ -17,6 +17,7 @@ import {
     formEditarPerfil,
     editarPerfil,
     validarPerfil,
+    subirImagen
     } from '../controllers/usuariosController.js';
 import { autenticarUsuario, mostrarPanel, verificarUsuario, cerrarSesion } from '../controllers/authController.js';
 const router = express.Router();
@@ -51,6 +52,6 @@ router.get('/administracion', verificarUsuario ,mostrarPanel);
 
 // editar perfil 
 router.get('/editar-perfil', verificarUsuario, formEditarPerfil);
-router.post('/editar-perfil', verificarUsuario, validarPerfil, editarPerfil);
+router.post('/editar-perfil', verificarUsuario, subirImagen, editarPerfil);
 
 export default router;
