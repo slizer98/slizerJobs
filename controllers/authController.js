@@ -21,7 +21,6 @@ const verificarUsuario = (req, res, next) => {
 }
 
 const mostrarPanel = async(req, res) => {
-    // consultar el usuario autenticado
     const vacantes = await Vacante.find({ autor: req.user._id });
 
     res.render("administracion", {
@@ -29,6 +28,7 @@ const mostrarPanel = async(req, res) => {
         tagline: "Crea y administra tus vacantes desde aquí",
         cerrarSesion: true,
         nombre: req.user.nombre,
+        imagen: req.user.imagen,
         vacantes,
     });
 }

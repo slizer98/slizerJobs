@@ -8,6 +8,9 @@ const mostrarTrabajos = async (req, res, next) => {
         tagline: 'Encuentra y publica trabajos para Desarrolladores Web',
         barra: true,
         boton: true,
+        cerrarSesion: true,
+        nombre: req.user.nombre,
+        imagen: req.user.imagen,
         vacantes
     })
 }

@@ -1,22 +1,27 @@
 import multer from 'multer';
 import Usuarios from '../models/Usuarios.js';
 import {check, validationResult}  from 'express-validator'
-import { fileURLToPath } from 'url';
 import shortid from 'shortid';
 import path from 'path';
 
 
 const subirImagen = (req, res, next) => {
     upload(req, res, function(error){
-        if(error instanceof multer.MulterError){
-            return next();
+        if(error){
+            if(error instanceof multer.MulterError){
+                if( error.code == 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'El archivo es muy grande: Máximo 100kb');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            return res.redirect('/administracion');
         }
         next();
     }) 
 }
-
-const filePath = fileURLToPath(new URL('../../public/uploads/perfiles', import.meta.url));
-
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,14 +33,14 @@ const fileStorage = multer.diskStorage({
 });
 
 const configuracionMulter = {
+    limits: {fileSize: 500000},
     storage: fileStorage,
     fileFilter(req, file, cb){
-        if(!file.mimetype === 'image/jpeg' || !file.mimetype === 'image/png'){
-            cb(null, false);
+        if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+           return cb(null, true);
         }
-        cb(null, true);
+        cb(new Error('Formato No Valido'), false);
     },
-    limits: {fileSize: 100000}
 }
 
 const upload = multer(configuracionMulter).single('imagen');
@@ -95,6 +100,7 @@ const formEditarPerfil = (req, res) => {
         nombrePagina: 'Edita tu perfil en SlizerJobs',
         usuario: req.user,
         cerrarSesion: true,
+        imagen: req.user.imagen,
         nombre: req.user.nombre
     });
 }
@@ -133,6 +139,7 @@ const validarPerfil = async(req, res, next) => {
             usuario: req.user,
             cerrarSesion: true,
             nombre: req.user.nombre,
+            imagen: req.user.imagen,
             mensajes: req.flash()
         });
         return;

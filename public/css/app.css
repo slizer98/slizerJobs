@@ -99,6 +99,7 @@ h3 {
 .nombre-sitio {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .nombre-sitio a {
     color: white;
@@ -106,6 +107,7 @@ h3 {
 }
 .buscador {
     padding-top: 1rem;
+    margin-right: 2.5rem;
     display: flex;
     justify-content: flex-end;
     flex: 1;
@@ -400,11 +402,29 @@ p.candidatos {
     text-decoration: none;
     color: #616065;
 }
-.admin-perfil {
-    width: 120px;
-    align-self: flex-start;
+
+.container-perfil {
+    width: 50px;
+    height: 50px;
     margin-right: 1rem;
+    align-self: flex-start;
+    overflow: hidden;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+.admin-perfil {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 50%;
+    /* overflow: cover; */
+}
+
+.campo-imagen img {
+    width: 120px;
+}
+
 .cerrar-sesion p, 
 .cerrar-sesion a {
     margin:  0 2rem 0 0 ;
@@ -416,9 +436,9 @@ p.candidatos {
     color: #fff;
 }
 .cerrar-sesion {
-    margin-top: 2rem;
     color: white;
     display: flex;
+    align-items: center;
 }
 .cerrar-sesion img {
         width: 80px;
