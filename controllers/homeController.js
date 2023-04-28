@@ -9,8 +9,6 @@ const mostrarTrabajos = async (req, res, next) => {
         barra: true,
         boton: true,
         cerrarSesion: true,
-        nombre: req.user.nombre,
-        imagen: req.user.imagen,
         vacantes
     })
 }

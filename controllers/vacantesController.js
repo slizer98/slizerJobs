@@ -25,7 +25,7 @@ const agregarVacante = async(req, res) => {
 }
 
 const mostrarVacante = async(req, res, next) => {
-    const vacante = await Vacante.findOne({ url: req.params.url });
+    const vacante = await Vacante.findOne({ url: req.params.url }).populate('autor');
 
     if (!vacante) return next();
 
