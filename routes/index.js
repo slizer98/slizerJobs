@@ -7,7 +7,10 @@ import {
     formEditarVacante, 
     editarVacante,
     validarVacante,
-    eliminarVacante
+    eliminarVacante,
+    contactar,
+    subirCV,
+    mostrarCandidatos
     } from '../controllers/vacantesController.js';
 import { 
     formCrearCuenta, 
@@ -53,5 +56,11 @@ router.get('/administracion', verificarUsuario ,mostrarPanel);
 // editar perfil 
 router.get('/editar-perfil', verificarUsuario, formEditarPerfil);
 router.post('/editar-perfil', verificarUsuario, subirImagen, editarPerfil);
+
+// Recibir mensajes de candidatos
+router.post('/vacantes/:url', subirCV, contactar);
+
+// Muestra los candidatos por vacante
+router.get('/candidatos/:id', verificarUsuario, mostrarCandidatos);
 
 export default router;

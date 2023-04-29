@@ -1,5 +1,8 @@
 import {check, validationResult}  from 'express-validator'
 import Vacante from '../models/Vacantes.js';
+import multer from 'multer';
+import shortid from 'shortid';
+import path from 'path';
 
 const formularioNuevaVacante = (req, res) => {
     res.render('nueva-vacante', {
@@ -106,6 +109,85 @@ const verificarAutor = async(vacante = {}, usuario = {}) => {
     return true;
 }   
 
+// Subir archivos en PDF
+
+const subirCV = (req, res, next) => {
+    upload(req, res, function(error){
+        if(error){
+            if(error instanceof multer.MulterError){
+                if( error.code == 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'El archivo es muy grande: Máximo 500kb');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            return res.redirect('back');
+        }
+        next();
+    }) 
+}
+
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/uploads/cv');
+    },
+    filename: (req, file, cb) => {
+        cb(null, shortid.generate() + path.extname(file.originalname));
+    },
+});
+
+const configuracionMulter = {
+    limits: {fileSize: 500000},
+    storage: fileStorage,
+    fileFilter(req, file, cb){
+        if(file.mimetype === 'application/pdf'){
+           return cb(null, true);
+        }
+        cb(new Error('Formato No Valido'), false);
+    },
+}
+
+const upload = multer(configuracionMulter).single('cv');
+
+// alamacena los candidatos en la BD
+const contactar = async(req, res, next) => {
+    const vacante = await Vacante.findOne({url: req.params.url});
+
+    if(!vacante) return next();
+
+    // todo bien, construir el nuevo objeto
+    const nuevoCandidato = {
+        nombre: req.body.nombre,
+        email: req.body.email,
+        cv: req.file.filename
+    };
+
+    // almacenar la vacante
+    vacante.candidatos.push(nuevoCandidato);
+    await vacante.save();
+
+    // mensaje flash y redireccion
+    req.flash('correcto', 'Se envió tu Curriculum Correctamente');
+    res.redirect('/');
+}
+
+const mostrarCandidatos = async(req, res, next) => {
+    const vacante = await Vacante.findById(req.params.id);
+    if(vacante.autor != req.user._id.toString()){
+        return next();
+    }
+    if(!vacante) return next();
+    res.render('candidatos', {
+        nombrePagina: `Candidatos Vacante - ${vacante.titulo}`,
+        cerrarSesion: true,
+        nombre: req.user.nombre,
+        imagen: req.user.imagen,
+        candidatos: vacante.candidatos
+    });
+}
+
 export {
     formularioNuevaVacante,
     agregarVacante,
@@ -113,5 +195,8 @@ export {
     formEditarVacante,
     editarVacante,
     validarVacante,
-    eliminarVacante
+    eliminarVacante,
+    subirCV,
+    contactar,
+    mostrarCandidatos
 }
