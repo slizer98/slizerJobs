@@ -1,5 +1,7 @@
 import passport from "passport";
 import Vacante from "../models/Vacantes.js";
+import Usuarios from "../models/Usuarios.js";
+import crypto from "crypto";
 
 const autenticarUsuario = passport.authenticate("local", {
     successRedirect: "/administracion",
@@ -43,4 +45,41 @@ const cerrarSesion = (req, res) => {
     });
 }
 
-export { autenticarUsuario, mostrarPanel, verificarUsuario, cerrarSesion };
+// formulario para reiniciar el password
+
+const formReestablecerPassword = (req, res) => {
+    res.render('reestablecer-password', {
+        nombrePagina: 'Reestablece tu password',
+        tagline: 'Si ya tienes una cuenta pero olvidaste tu password coloca tu email'
+    })
+}
+
+// genera el token en la tabla del usuario
+const enviarToken = async(req, res) => {
+    const usuario = await Usuarios.findOne({email: req.body.email});
+    if (!usuario) {
+        req.flash('error', 'No existe esa cuenta');
+        return res.redirect('/crear-cuenta');
+    }
+
+    usuario.token = crypto.randomBytes(20).toString('hex');
+    usuario.expira = Date.now() + 3600000;
+
+    await usuario.save();
+    const resetUrl = `http://${req.headers.host}/reestablecer-password/${usuario.token}`;
+    console.log(resetUrl);
+
+    // TODO: enviar notificacion por email
+
+    req.flash('correcto', 'Revisa tu email para las indicaciones');
+    res.redirect('/iniciar-sesion');
+}
+
+export { 
+    autenticarUsuario, 
+    mostrarPanel, 
+    verificarUsuario, 
+    cerrarSesion ,
+    formReestablecerPassword,
+    enviarToken
+};

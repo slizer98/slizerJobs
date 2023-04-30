@@ -10,7 +10,8 @@ import {
     eliminarVacante,
     contactar,
     subirCV,
-    mostrarCandidatos
+    mostrarCandidatos,
+
     } from '../controllers/vacantesController.js';
 import { 
     formCrearCuenta, 
@@ -22,7 +23,14 @@ import {
     validarPerfil,
     subirImagen
     } from '../controllers/usuariosController.js';
-import { autenticarUsuario, mostrarPanel, verificarUsuario, cerrarSesion } from '../controllers/authController.js';
+import { 
+    autenticarUsuario, 
+    mostrarPanel, 
+    verificarUsuario, 
+    cerrarSesion,
+    formReestablecerPassword,
+    enviarToken
+ } from '../controllers/authController.js';
 const router = express.Router();
 
 router.get('/', mostrarTrabajos);
@@ -49,6 +57,10 @@ router.post('/iniciar-sesion', autenticarUsuario);
 
 // cerrar sesion
 router.get('/cerrar-sesion',verificarUsuario, cerrarSesion );
+
+// Resetear password
+router.get('/reestablecer-password', formReestablecerPassword);
+router.post('/reestablecer-password', enviarToken);
 
 // Administracion 
 router.get('/administracion', verificarUsuario ,mostrarPanel);
