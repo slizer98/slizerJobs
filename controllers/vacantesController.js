@@ -188,6 +188,21 @@ const mostrarCandidatos = async(req, res, next) => {
     });
 }
 
+const buscarVacantes = async(req, res) => {
+    const vacantes = await Vacante.find({
+        $text: {
+            $search: req.body.q
+        }
+    }).lean();
+    
+    // mostrar las vacantes
+    res.render('home', {
+        nombrePagina: `Resultados para la busqueda: ${req.body.q}`,
+        barra: true,
+        vacantes
+    });
+}
+
 export {
     formularioNuevaVacante,
     agregarVacante,
@@ -198,5 +213,6 @@ export {
     eliminarVacante,
     subirCV,
     contactar,
-    mostrarCandidatos
+    mostrarCandidatos,
+    buscarVacantes
 }

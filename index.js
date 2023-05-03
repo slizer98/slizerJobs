@@ -9,6 +9,7 @@ import session from 'express-session';
 import handlebars from 'handlebars';
 import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access';
 import { seleccionarSkills, tipoContrato, mostrarAlertas}  from './helpers/handlebars.js';
+import createError from 'http-errors';
 import passport from './config/passport.js';
 
 import MongoStore from 'connect-mongo';
@@ -57,6 +58,19 @@ app.use((req, res, next) => {
 });
 
 app.use('/', router);
+// 404 page
+app.use((req, res, next) => {
+    next(createError(404, 'No encontrado'));
+});
+
+// Administración de los errores
+app.use((error, req, res, next) => {
+    res.locals.mensaje = error.message;
+    const status = error.status || 500;
+    res.locals.status = status;
+    res.status(status);
+    res.render('error');
+})
 
 const puerto = process.env.PUERTO || 3000;
 app.listen(puerto, () => {

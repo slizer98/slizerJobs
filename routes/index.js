@@ -11,6 +11,7 @@ import {
     contactar,
     subirCV,
     mostrarCandidatos,
+    buscarVacantes
 
     } from '../controllers/vacantesController.js';
 import { 
@@ -29,7 +30,9 @@ import {
     verificarUsuario, 
     cerrarSesion,
     formReestablecerPassword,
-    enviarToken
+    enviarToken,
+    reestablecerPassword,
+    guardarPassword
  } from '../controllers/authController.js';
 const router = express.Router();
 
@@ -62,6 +65,10 @@ router.get('/cerrar-sesion',verificarUsuario, cerrarSesion );
 router.get('/reestablecer-password', formReestablecerPassword);
 router.post('/reestablecer-password', enviarToken);
 
+// resetear password (almacenar en la BD)
+router.get('/reestablecer-password/:token', reestablecerPassword);
+router.post('/reestablecer-password/:token', guardarPassword);
+
 // Administracion 
 router.get('/administracion', verificarUsuario ,mostrarPanel);
 
@@ -74,5 +81,8 @@ router.post('/vacantes/:url', subirCV, contactar);
 
 // Muestra los candidatos por vacante
 router.get('/candidatos/:id', verificarUsuario, mostrarCandidatos);
+
+// Buscador de vacantes
+router.post('/buscador', buscarVacantes);
 
 export default router;
